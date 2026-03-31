@@ -15,4 +15,6 @@ export const config = {
   DB_USERNAME: process.env.DB_USERNAME,
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_EXPIRY: process.env.JWT_EXPIRY,
+  GMAIL_USER: process.env.GMAIL_USER || '',
+  GMAIL_PASSWORD: process.env.GMAIL_PASSWORD || '',
 };

@@ -11,13 +11,23 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
-import { ForgotPasswordDto, LoginDto, Role } from 'src/base.entity';
-import { UtilService } from 'src/utils/utility-service';
+import {
+  ForgotPasswordDto,
+  LoginDto,
+  Role,
+  EmailEventsEnum,
+} from 'src/base.entity';
+import { UtilService } from 'src/common/utils/utility-service';
 import { Transactional } from 'typeorm-transactional';
 import { buildUserFilter } from '../filters/query-filter';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { config } from 'src/config';
+import { EmailEventEmitterService } from 'src/common/events/email-event-emitter.service';
+import {
+  emailVerificationTemplate,
+  welcomeUserTemplate,
+} from 'src/email/templates/email-templates';
 
 @Injectable()
 export class UsersService {
@@ -25,6 +35,7 @@ export class UsersService {
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
     private readonly authService: AuthService,
+    private readonly emailEventEmitter: EmailEventEmitterService,
   ) {}
 
   @Transactional()
@@ -54,6 +65,15 @@ export class UsersService {
       otp_expiry: UtilService.generateOTPExpiration(),
     };
     const createdUser = await this.usersRepository.save(newUser);
+    this.emailEventEmitter.emitEmailEvent(
+      {
+        to: createdUser.email,
+        subject: 'Verify Your Email',
+        body: emailVerificationTemplate(otp),
+        from: `"Echo" <noreply@echo.com>`,
+      },
+      EmailEventsEnum.SEND_VERIFICATION_EMAIL,
+    );
 
     return {
       first_name: createdUser.first_name,
@@ -103,6 +123,15 @@ export class UsersService {
       otp: null,
       otp_expiry: null,
     });
+    this.emailEventEmitter.emitEmailEvent(
+      {
+        to: user.email,
+        subject: 'Welcome to Echo!',
+        body: welcomeUserTemplate(user.first_name),
+        from: `"Echo" <noreply@echo.com>`,
+      },
+      EmailEventsEnum.SEND_WELCOME_EMAIL,
+    );
 
     return verifiedUser;
   }
@@ -126,6 +155,16 @@ export class UsersService {
       otp: hashedOTP,
       otp_expiry: UtilService.generateOTPExpiration(),
     });
+
+    this.emailEventEmitter.emitEmailEvent(
+      {
+        to: user.email,
+        subject: 'Verify Your Email',
+        body: emailVerificationTemplate(otp),
+        from: `"Echo" <noreply@echo.com>`,
+      },
+      EmailEventsEnum.SEND_VERIFICATION_EMAIL,
+    );
 
     return {
       message: `A new otp successfully sent to: ${user.email}`,
