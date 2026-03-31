@@ -32,6 +32,11 @@ export enum Role {
   ADMIN = 'admin',
 }
 
+export enum EmailEventsEnum {
+  SEND_VERIFICATION_EMAIL = 'send.verification.email',
+  SEND_WELCOME_EMAIL = 'send.welcome.email',
+}
+
 export interface IPagination {
   totalRows: number;
   perPage: number;
