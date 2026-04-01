@@ -17,4 +17,5 @@ export const config = {
   JWT_EXPIRY: process.env.JWT_EXPIRY,
   GMAIL_USER: process.env.GMAIL_USER || '',
   GMAIL_PASSWORD: process.env.GMAIL_PASSWORD || '',
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
 };
