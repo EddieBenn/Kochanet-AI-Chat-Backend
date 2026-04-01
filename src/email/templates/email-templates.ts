@@ -431,7 +431,7 @@ export const welcomeUserTemplate = (name?: string) => `
     
     .features-list {
       font-size: 16px;
-      color: #374151;
+      color: #785DBA;
       line-height: 2;
       margin: 0;
     }
@@ -657,7 +657,7 @@ export const welcomeUserTemplate = (name?: string) => `
     <!-- Header with logo and social icons -->
     <div class="header">
       <div class="header-top">
-        <div class="logo">Naga Collections</div>
+        <div class="logo">Echo</div>
       </div>
     </div>
     
@@ -678,7 +678,7 @@ export const welcomeUserTemplate = (name?: string) => `
       
       <!-- Main content -->
       <p class="congratulations-text">
-        Congratulations${name ? `, ${name}` : ''}! Your email has been verified and your Echo account is now active. You're all set to explore our amazing ai chat features.
+        Congratulations${name ? `, ${name}` : ''}! Your email has been verified and your Echo account is now active. You're all set to explore our amazing AI chat features.
       </p>
       
       <!-- Features/Benefits -->
