@@ -17,7 +17,7 @@ import {
   Role,
   EmailEventsEnum,
 } from 'src/base.entity';
-import { UtilService } from 'src/common/utils/utility-service';
+import { UtilService } from 'src/common/utils/utility.service';
 import { Transactional } from 'typeorm-transactional';
 import { buildUserFilter } from '../filters/query-filter';
 import { Response } from 'express';
