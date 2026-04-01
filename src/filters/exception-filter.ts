@@ -15,14 +15,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
-    const data = exception.getResponse();
+    const data = exception.getResponse() as any;
+    const parsed = typeof data === 'string' ? data : data?.message;
+
+    const message = Array.isArray(parsed)
+      ? parsed.map(({ target: _t, children: _c, ...rest }) => rest)
+      : parsed;
 
     response.status(status).json({
       success: false,
-      message:
-        typeof JSON.parse(JSON.stringify(data)) == 'string'
-          ? JSON.parse(JSON.stringify(data))
-          : JSON.parse(JSON.stringify(data)).message,
+      message,
       statusCode: status,
       path: request.url,
     });
