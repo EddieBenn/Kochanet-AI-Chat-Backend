@@ -89,7 +89,7 @@ export class UsersService {
     };
   }
 
-  async verifyOTP(email: string, otp: string): Promise<UpdateResult> {
+  async verifyOTP(email: string, otp: string): Promise<{ message: string }> {
     const user = await this.usersRepository.findOne({
       where: { email },
     });
@@ -118,7 +118,7 @@ export class UsersService {
       throw new UnauthorizedException('Invalid OTP');
     }
 
-    const verifiedUser = await this.usersRepository.update(user.id, {
+    await this.usersRepository.update(user.id, {
       is_verified: true,
       otp: null,
       otp_expiry: null,
@@ -133,7 +133,9 @@ export class UsersService {
       EmailEventsEnum.SEND_WELCOME_EMAIL,
     );
 
-    return verifiedUser;
+    return {
+      message: `You have successfully verified your email: ${user.email}`,
+    };
   }
 
   async resendOTP(email: string): Promise<{ message: string }> {
