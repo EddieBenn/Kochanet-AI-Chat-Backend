@@ -431,7 +431,7 @@ export const welcomeUserTemplate = (name?: string) => `
     
     .features-list {
       font-size: 16px;
-      color: #374151;
+      color: #785DBA;
       line-height: 2;
       margin: 0;
     }
